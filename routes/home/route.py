@@ -34,7 +34,12 @@ class HomeRouteWithId(Resource):
         data_object = db.session.query(User).filter(User.user_id==id).first()
         if (data_object):
             for key in request.form.keys():
-                setattr(data_object, key, request.form[key])
+                if key == 'done':
+                    done=request.form[key]=="True"
+                    setattr(data_object, key, done)
+                else:
+                    setattr(data_object, key, request.form[key])
+                    
             db.session.commit()
             return {"data": data_object.to_json()}
         else:
