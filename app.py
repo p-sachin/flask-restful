@@ -16,6 +16,12 @@ def create_app():
     db.init_app(app) # Initialize the database 
     db.create_all(app=app) # Create tables
     api = Api(app)
-    api.add_resource(HomeRoute, '/')
-    api.add_resource(HomeRouteWithId, '/<string:id>')
+    api.add_resource(HomeRoute, '/todos/')
+    api.add_resource(HomeRouteWithId, '/todos/<string:id>')
     return app
+
+
+app = create_app()
+
+if __name__ == "__main__":
+    app.run(debug=True)

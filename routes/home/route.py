@@ -1,6 +1,5 @@
 from flask_restful import Resource
 from flask import request
-import uuid
 from utils.models.user import User
 from utils.db import db
 
@@ -13,26 +12,18 @@ class HomeRoute(Resource):
         return {'data': users}
     
     def post(self):
-        first_name = request.form["first_name"]
-        last_name = request.form["last_name"]
-        email = request.form["email"]
-        user = User(first_name=first_name, last_name=last_name, email=email)
+        title = request.form["title"]
+        description = request.form["description"]
+        done = eval(request.form['done'].title())
+        user = User(title=title, description=description, done=done)
         db.session.add(user)
         db.session.commit()
         return {'data': user.to_json()}
 
 
-def find_object_by_id(id):
-    for data_object in data:
-        if data_object["user_id"] == id:
-            return data_object
-        else:
-            return None
-
-
 class HomeRouteWithId(Resource):
     def get(self, id):
-        data_object = db.session.query(User).filter(User.user_id == id).first()
+        data_object = db.session.query(User).filter(User.user_id==id).first()
         if (data_object):
             return {"data": data_object.to_json()}
         else:
@@ -40,7 +31,7 @@ class HomeRouteWithId(Resource):
 
 
     def put(self, id):
-        data_object = db.session.query(User).filter(User.user_id == id).first()
+        data_object = db.session.query(User).filter(User.user_id==id).first()
         if (data_object):
             for key in request.form.keys():
                 setattr(data_object, key, request.form[key])
@@ -52,7 +43,7 @@ class HomeRouteWithId(Resource):
 
 
     def delete(self, id):
-        data_object = db.session.query(User).filter(User.user_id == id).first()
+        data_object = db.session.query(User).filter(User.user_id==id).first()
         if (data_object):
             db.session.delete(data_object)
             db.session.commit()
